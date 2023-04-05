@@ -25,15 +25,15 @@ func Parse(r io.Reader) (*BObject, error) {
 		if err != nil {
 			return nil, err
 		}
-		ret.type_ = BINT
+		ret.type_ = BSTR
 		ret.val_ = val
 	case b[0] == 'i':
 		// parsing int
-		val, err := DecodeString(br)
+		val, err := DecodeInt(br)
 		if err != nil {
 			return nil, err
 		}
-		ret.type_ = BSTR
+		ret.type_ = BINT
 		ret.val_ = val
 	case b[0] == 'l':
 		// parsing list
@@ -64,8 +64,8 @@ func Parse(r io.Reader) (*BObject, error) {
 				br.ReadByte()
 				break
 			}
-
 			// 读取key
+
 			key, err := DecodeString(br)
 			if err != nil {
 				return nil, err
