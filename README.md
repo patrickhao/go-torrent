@@ -1,2 +1,2 @@
 # go-torrent
-Exercise project for golang
+Practice project for golang
