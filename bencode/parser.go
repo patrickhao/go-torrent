@@ -66,12 +66,12 @@ func Parse(r io.Reader) (*BObject, error) {
 			}
 
 			// 读取key
-			key, err = DecodeString(br)
+			key, err := DecodeString(br)
 			if err != nil {
 				return nil, err
 			}
 
-			val, err = Parse(br)
+			val, err := Parse(br)
 			if err != nil {
 				return nil, err
 			}
