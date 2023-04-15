@@ -208,7 +208,7 @@ func NewConn(peer PeerInfo, infoSHA [SHALEN]byte, peerId [IDLEN]byte) (*PeerConn
 
 	c := &PeerConn{
 		Conn:    conn, // 将c中的Conn设置为已经建立连接的conn
-		Chocked: true,
+		Chocked: true, // 对方默认是chock的，即不愿意上传，等待对方的unchock，表示对方愿意上传再进行通信
 		peer:    peer,
 		peerId:  peerId,
 		infoSHA: infoSHA,
