@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// 将满足格式的字符串转为go中的slice或struct，可以灵活处理不同类型的slice和struct
+// 将torrent格式的字符串转为go中的slice或struct，可以灵活处理不同类型的slice和struct
 func Unmarshal(r io.Reader, s interface{}) error {
 	o, err := Parse(r)
 	if err != nil {
@@ -267,7 +267,7 @@ func marshalDict(w io.Writer, vd reflect.Value) int {
 	return len
 }
 
-// 将go中的slice或struct转为满足格式的字符串，可以灵活处理不同类型的slice和struct
+// 将go中的slice或struct转为torrent格式的字符串，可以灵活处理不同类型的slice和struct
 func Marshal(w io.Writer, s interface{}) int {
 	v := reflect.ValueOf(s)
 	// 这里只需要指针指向位置的值，将其转为字符串，因此使用该操作使其兼容指针
