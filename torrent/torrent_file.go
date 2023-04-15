@@ -22,7 +22,7 @@ type rawFile struct {
 	Info     rawInfo `bencode:"info"`
 }
 
-// SHA值每20个一组放入数组中，方便使用
+// SHA值放入数组中，方便使用
 const SHALEN int = 20
 
 // torrent file的原生格式不太好用，转成下面的struct

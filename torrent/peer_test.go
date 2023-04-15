@@ -11,8 +11,8 @@ import (
 
 func TestPeer(t *testing.T) {
 	var peer PeerInfo
-	peer.Ip = net.ParseIP("80.246.246.22")
-	peer.Port = uint16(17948)
+	peer.Ip = net.ParseIP("81.249.184.127")
+	peer.Port = uint16(6969)
 
 	file, _ := os.Open("../testfile/debian-iso.torrent")
 	tf, _ := ParseFile(bufio.NewReader(file))

@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	Reserved int = 8 // 保留位，为以后扩充协议准备
-	HsMsgLen int = SHALEN + IDLEN + Reserved
+	Reserved int = 8                         // 保留位，为以后扩充协议准备
+	HsMsgLen int = SHALEN + IDLEN + Reserved // 包括InfoSHA的长度和PeerId的长度，用于标识文件信息和下载器信息
 )
 
 type HandshakeMsg struct {

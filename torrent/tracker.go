@@ -41,7 +41,7 @@ func buildUrl(tf *TorrentFile, peerId [IDLEN]byte) (string, error) {
 
 	params := url.Values{
 		"info_hash":  []string{string(tf.InfoSHA[:])},
-		"peer_id":    []string{string(peerId[:])},
+		"peer_id":    []string{string(peerId[:])}, // 自己下载器的标识
 		"port":       []string{strconv.Itoa(PeerPort)},
 		"uploaded":   []string{"0"},
 		"downloaded": []string{"0"},
@@ -71,6 +71,7 @@ func buildPeerInfo(peers []byte) []PeerInfo {
 	return infos
 }
 
+// 这里的peerId是本地客户端的标识，包含一些客户端的信息，这里因为是一个toy，使用的是随机生成的
 func FindPeers(tf *TorrentFile, peerId [IDLEN]byte) []PeerInfo {
 	url, err := buildUrl(tf, peerId)
 	if err != nil {

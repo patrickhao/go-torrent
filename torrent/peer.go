@@ -38,6 +38,7 @@ type PeerConn struct {
 	infoSHA  [SHALEN]byte
 }
 
+// 与peer建立连接的过程
 func handshake(conn net.Conn, infoSHA [SHALEN]byte, peerId [IDLEN]byte) error {
 	conn.SetDeadline(time.Now().Add(3 * time.Second))
 	defer conn.SetDeadline(time.Time{})
@@ -58,6 +59,7 @@ func handshake(conn net.Conn, infoSHA [SHALEN]byte, peerId [IDLEN]byte) error {
 	}
 
 	// check HandshakeMsg
+	// 检查对方有的文件的类型是否和要下载的相同
 	if !bytes.Equal(res.InfoSHA[:], infoSHA[:]) {
 		fmt.Println("check handshake failed")
 		return fmt.Errorf("handshake msg error: " + string(res.InfoSHA[:]))
@@ -65,6 +67,7 @@ func handshake(conn net.Conn, infoSHA [SHALEN]byte, peerId [IDLEN]byte) error {
 	return nil
 }
 
+// 从c发回的消息中获取bitfiled，即当前peer有哪些piece，每个piece用一个bit标识
 func fillBitfield(c *PeerConn) error {
 	c.SetDeadline(time.Now().Add(5 * time.Second))
 	defer c.SetDeadline(time.Time{})
@@ -83,6 +86,8 @@ func fillBitfield(c *PeerConn) error {
 	}
 
 	fmt.Println("fill bitfield: " + c.peer.Ip.String())
+
+	// 设置当前连接peer的bitfield
 	c.Field = msg.Payload
 	return nil
 }
@@ -94,7 +99,7 @@ func (c *PeerConn) ReadMsg() (*PeerMsg, error) {
 	if err != nil {
 		return nil, err
 	}
-	length := binary.BigEndian.Uint16(lenBuf)
+	length := binary.BigEndian.Uint32(lenBuf)
 
 	// keep alive msg
 	if length == 0 {
@@ -180,6 +185,9 @@ func NewRequestMsg(index, offset, length int) *PeerMsg {
 	return &PeerMsg{MsgRequest, payload}
 }
 
+// PeerInfo为想要通信的peer的信息
+// infoSHA表示要下载文件的信息，相当于文件的唯一标识
+// peerId表示下载器客户端表示，这里用的是随机生成的
 func NewConn(peer PeerInfo, infoSHA [SHALEN]byte, peerId [IDLEN]byte) (*PeerConn, error) {
 	// setup tcp conn
 	addr := net.JoinHostPort(peer.Ip.String(), strconv.Itoa(int(peer.Port)))
@@ -190,6 +198,7 @@ func NewConn(peer PeerInfo, infoSHA [SHALEN]byte, peerId [IDLEN]byte) (*PeerConn
 	}
 
 	// torrent p2p handshake
+	// 经过handshake，conn中已经是建立好并通过握手的连接了
 	err = handshake(conn, infoSHA, peerId)
 	if err != nil {
 		fmt.Println("handshake failed")
@@ -198,7 +207,7 @@ func NewConn(peer PeerInfo, infoSHA [SHALEN]byte, peerId [IDLEN]byte) (*PeerConn
 	}
 
 	c := &PeerConn{
-		Conn:    conn,
+		Conn:    conn, // 将c中的Conn设置为已经建立连接的conn
 		Chocked: true,
 		peer:    peer,
 		peerId:  peerId,
