@@ -25,6 +25,7 @@ func main() {
 	}
 
 	// random peerId
+	// 随机生成当前客户端的一些信息
 	var peerId [torrent.IDLEN]byte
 	_, _ = rand.Read(peerId[:])
 
